@@ -38,3 +38,9 @@ chmod +x *.py
 ./loadCustomer.py localhost 27017
 ./loadStockItem.py localhost 27017
 ./loadOrder.py localhost 27017
+
+cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
+./mongoexport -d team10 -c warehouse_district --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/warehouse_district.json
+./mongoexport -d team10 -c customer --type json /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/customer.json
+./mongoexport -d team10 -c stock_item --type json /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/stock_item.json
+./mongoexport -d team10 -c order --type json ./mongoexport -d team10 -c stock_item --type json /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/order.json
