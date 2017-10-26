@@ -15,7 +15,7 @@ warehouseCollection = db.warehouse_district
 districtCollection = db.district
 customerCollection = db.customer
 for customer in customerCollection.find():
-	db.customer.update({"c_w_id": customer["c_w_id"], "c_d_id": customer["c_d_id"], "c_id": customer["c_id"]},{"$set":{"c_address":{"c_street_1": customer["c_street_1"], "c_street_2": customer["c_street_2"], "c_city":customer["c_city"], "w_state": customer["c_state"], "c_zip":customer["c_zip"]}}})
+	db.customer.update({"c_w_id": customer["c_w_id"], "c_d_id": customer["c_d_id"], "c_id": customer["c_id"]},{"$set":{"c_address":{"c_street_1": customer["c_street_1"], "c_street_2": customer["c_street_2"], "c_city":customer["c_city"], "c_state": customer["c_state"], "c_zip":customer["c_zip"]}}})
 
 	# Insert w_name, d_name
 	warehouseName = warehouseCollection.find_one({"w_id": customer["c_w_id"]})
