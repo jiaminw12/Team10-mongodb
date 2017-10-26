@@ -12,7 +12,7 @@
 declare -r DATA_FOLDER="data-files"
 declare -r XACT_FOLDER="xact-files"
 
-cd ~/Team10
+cd ~/Team10-mongodb
 
 echo -ne "Checking whether data and xact folder exist...\n"
 if [ -d $DATA_FOLDER ];
@@ -24,8 +24,8 @@ else
 	unzip 4224-project-files.zip
 
 	cd 4224-project-files
-	mv data-files ~/Team10/
-	mv xact-files ~/Team10/
+	mv data-files ~/Team10-mongodb/
+	mv xact-files ~/Team10-mongodb/
 	cd ..
 	rm -Rf 4224-project-files
 	rm -Rf 4224-project-files.zip
