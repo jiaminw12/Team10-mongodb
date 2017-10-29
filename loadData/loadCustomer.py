@@ -8,9 +8,6 @@ from pymongo import MongoClient
 client = MongoClient(sys.argv[1], int(sys.argv[2]))
 db = client.team10 # Getting a database
 
-# create indexes
-db.customer.create_index([('c_w_id', pymongo.ASCENDING), ('c_d_id', pymongo.ASCENDING), ('c_id', pymongo.ASCENDING)])
-
 warehouseCollection = db.warehouse_district
 districtCollection = db.district
 customerCollection = db.customer

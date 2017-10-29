@@ -8,9 +8,6 @@ from pymongo import MongoClient
 client = MongoClient(sys.argv[1], int(sys.argv[2]))
 db = client.team10 # Getting a database
 
-# Getting a collection, create indexes
-collection = db.warehouse.create_index([('w_id', pymongo.ASCENDING)])
-
 warehouseCollection = db.warehouse
 for warehouse in warehouseCollection.find():
 	w_id = warehouse["w_id"]

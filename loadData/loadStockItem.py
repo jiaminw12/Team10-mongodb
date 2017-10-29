@@ -8,9 +8,6 @@ from pymongo import MongoClient
 client = MongoClient(sys.argv[1], int(sys.argv[2]))
 db = client.team10 # Getting a database
 
-# Getting a collection, create indexes
-collection = db.stock.create_index([('s_w_id', pymongo.ASCENDING), ('s_i_id', pymongo.ASCENDING)])
-
 itemCollection = db.item
 for item in itemCollection.find():
 	i_id = item["i_id"]

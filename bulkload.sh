@@ -14,7 +14,8 @@ echo -ne "Loading WAREHOUSE_DISTRICT, ORDER_LINE, STOCK_ITEM, CUSTOMER data\n"
 cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 
 # drop database - team10
-./mongo team10 --eval "printjson(db.dropDatabase())"
+./mongo < ~/Team10-mongodb/mongo_drop_database.js
+./mongo < ~/Team10-mongodb/mongo_create_index.js
 
 # create collection
 ./mongoimport -d team10 -c warehouse --type csv --file ~/Team10-mongodb/data-files/warehouse.csv --fields w_id,w_name,w_street_1,w_street_2,w_city,w_state,w_zip,w_tax,w_ytd

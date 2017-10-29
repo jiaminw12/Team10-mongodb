@@ -8,9 +8,6 @@ from pymongo import MongoClient
 client = MongoClient(sys.argv[1], int(sys.argv[2]))
 db = client.team10 # Getting a database
 
-# Getting a collection, create indexes
-collection = db.order.create_index([('o_w_id', pymongo.ASCENDING), ('o_d_id', pymongo.ASCENDING), ('o_id', pymongo.ASCENDING)])
-
 #find all orderline
 orderlineCollection = db.orderline
 for orderline in orderlineCollection.find():
