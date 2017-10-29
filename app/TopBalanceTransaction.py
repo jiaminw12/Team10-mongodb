@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import pymongo
-
 from decimal import *
 from operator import itemgetter, attrgetter, methodcaller
 
