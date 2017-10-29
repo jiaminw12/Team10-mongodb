@@ -85,7 +85,7 @@ topBalanceXact = 'T'
 
 # Connect Keyspace
 connect = Connect(sys.argv[2], sys.argv[3])
-dbdbSession = connect.getDBSession()
+dbSession = connect.getDBSession()
 
 filePath = '../xact-files/%s' % sys.argv[1];
 start_time = time.time()
