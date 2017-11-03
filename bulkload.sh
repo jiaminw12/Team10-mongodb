@@ -15,7 +15,6 @@ cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 
 # drop database - team10
 ./mongo < ~/Team10-mongodb/mongo_drop_database.js
-./mongo < ~/Team10-mongodb/mongo_create_index.js
 
 # create collection
 ./mongoimport -d team10 -c warehouse --type csv --file ~/Team10-mongodb/data-files/warehouse.csv --fields w_id,w_name,w_street_1,w_street_2,w_city,w_state,w_zip,w_tax,w_ytd
@@ -47,6 +46,8 @@ echo -ne "Load Stock and Item \n"
 
 echo -ne "Load Order and Orderline \n"
 ./loadOrder.py localhost 27017
+
+./mongo < ~/Team10-mongodb/mongo_create_index.js
 
 cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 ./mongoexport -d team10 -c warehouse_district --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/warehouse_district.json

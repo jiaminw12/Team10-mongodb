@@ -15,7 +15,6 @@ cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 
 # drop database - team10
 ./mongo < ~/Team10-mongodb/mongo_drop_database.js
-./mongo < ~/Team10-mongodb/mongo_create_index.js
 
 # create collection
 ./mongoimport -d team10 -c warehouse_district --type json --file /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/warehouse_district.json
@@ -26,5 +25,4 @@ cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 
 ./mongoimport -d team10 -c order --type json --file /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/order.json
 
-# need to insert indexes
-# use js
+./mongo < ~/Team10-mongodb/mongo_create_index.js
