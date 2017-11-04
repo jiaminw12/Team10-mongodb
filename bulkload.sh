@@ -47,9 +47,9 @@ echo -ne "Load Stock and Item \n"
 echo -ne "Load Order and Orderline \n"
 ./loadOrder.py localhost 27017
 
+cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 ./mongo < ~/Team10-mongodb/mongo_create_index.js
 
-cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 ./mongoexport -d team10 -c warehouse_district --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/warehouse_district.json
 ./mongoexport -d team10 -c customer --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/customer.json
 ./mongoexport -d team10 -c stock_item --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/stock_item.json
