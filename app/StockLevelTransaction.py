@@ -31,7 +31,7 @@ class StockLevelTransaction(object):
 		#for every order in last order list collection, extract item id
 		for item in lastOrderListCollection:
 			item_id = item["ol_i_id"]
-			resultCount = self.session.stockitem.aggregate([{$match:{$and:["s_w_id": {"$eq":self.w_id}, "s_i_id":{"$eq":item_id}, "s_quantity":{"$lt":self.stockThreshold}]}}])
+			resultCount = self.session.stock_item.aggregate([{$match:{$and:["s_w_id": {"$eq":self.w_id}, "s_i_id":{"$eq":item_id}, "s_quantity":{"$lt":self.stockThreshold}]}}])
 		# get total number of items in S where its stock quantity < T
 			if resultCount < self.stockThreshold
 				print "Items below threshold\n"
