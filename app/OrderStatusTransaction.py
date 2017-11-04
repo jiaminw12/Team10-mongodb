@@ -27,10 +27,10 @@ class OrderStatusTransaction(object):
 		select_customer = customerCollection.find_one({"c_w_id":self.c_w_id,"c_d_id":self.c_d_id,"c_id":self.c_id})
 		
 		# get the last order id
-		select_last_order = order.find_one({"o_w_id":self.c_w_id,"o_d_id":self.c_d_id,"o_c_id":self.c_id}).sort("o_id",pymongo.DESCENDING)
+		select_last_order = orderCollection.find_one({"o_w_id":self.c_w_id,"o_d_id":self.c_d_id,"o_c_id":self.c_id}).sort("o_id",pymongo.DESCENDING)
 		lastOrder = select_last_order["o_id"]
 		#get list of items
-		getItemList = order.find({"ol_w_id":self.c_w_id, "ol_d_id": self.c_d_id, "ol_o_id":lastOrder},{ol_i_id:1,ol_supply_w_id:1,ol_quantity:1,ol_amount:1,ol_delivery_d:1})
+		getItemList = orderCollection.find({"ol_w_id":self.c_w_id, "ol_d_id": self.c_d_id, "ol_o_id":lastOrder},{ol_i_id:1,ol_supply_w_id:1,ol_quantity:1,ol_amount:1,ol_delivery_d:1})
 		#self.select_order = self.session.prepare("SELECT ol_i_id, ol_supply_w_id, ol_quantity, ol_amount, ol_delivery_d from OrderLine where ol_w_id = ? AND ol_d_id = ? AND ol_o_id = ? ALLOW FILTERING")
 
 
@@ -42,4 +42,4 @@ class OrderStatusTransaction(object):
 
 		#print item list
 		for item in getItemList:
-			print "OL_i_ID: %d \t OL_SUPPLY_ID: %d \t OL_QUANTITY: %d \t OL_AMOUNT: %f \t OL_DELIVERY_D: %s "%(item["ol_i_id"], item["ol_supply_w_id"], item["ol_quantity"], item["ol_amount"], item["ol_delivery_d"]))
+			print "OL_i_ID: %d \t OL_SUPPLY_ID: %d \t OL_QUANTITY: %d \t OL_AMOUNT: %f \t OL_DELIVERY_D: %s "%(item["ol_i_id"], item["ol_supply_w_id"], item["ol_quantity"], item["ol_amount"], item["ol_delivery_d"])
