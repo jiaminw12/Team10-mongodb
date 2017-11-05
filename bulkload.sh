@@ -10,6 +10,11 @@
 
 echo -ne "Loading WAREHOUSE_DISTRICT, ORDER_LINE, STOCK_ITEM, CUSTOMER data\n"
 
+# Change all null value to 0
+cp ~/Team10-mongodb/data-files/order.csv ~/Team10-mongodb/data-files/order_copy.csv
+
+sed -i -e 's/,null,/,0,/g' -e 's/^null,/0,/' -e 's/0,null,/0,0,/g' -e 's/,null$/,0/' ~/Team10-mongodb/data-files/order_copy.csv
+
 # Bulk load data
 cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 
@@ -23,7 +28,7 @@ cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 
 ./mongoimport -d team10 -c customer --type csv --file ~/Team10-mongodb/data-files/customer.csv --fields c_w_id,c_d_id,c_id,c_first,c_middle,c_last,c_street_1,c_street_2,c_city,c_state,c_zip,c_phone,c_since,c_credit,c_credit_lim,c_discount,c_balance,c_ytd_payment,c_payment_cnt,c_delivery_cnt,c_data
 
-./mongoimport -d team10 -c order --type csv --file ~/Team10-mongodb/data-files/order.csv --fields o_w_id,o_d_id,o_id,o_c_id,o_carrier_id,o_ol_cnt,o_all_local,o_entry_d
+./mongoimport -d team10 -c order --type csv --file ~/Team10-mongodb/data-files/order_copy.csv --fields o_w_id,o_d_id,o_id,o_c_id,o_carrier_id,o_ol_cnt,o_all_local,o_entry_d
 
 ./mongoimport -d team10 -c orderline --type csv --file ~/Team10-mongodb/data-files/order-line.csv --fields ol_w_id,ol_d_id,ol_o_id,ol_number,ol_i_id,ol_delivery_d,ol_amount,ol_supply_w_id,ol_quantity,ol_dist_info
 
