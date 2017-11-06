@@ -11,7 +11,7 @@ db = client.team10 # Getting a database
 itemCollection = db.item
 for item in itemCollection.find():
 	i_id = item["i_id"]
-	db.stock.update({"s_i_id": i_id}, {"$set": {"i_name": item["i_name"], "i_price":item["i_price"], "i_im_id":item["i_im_id"], "i_data":item["i_data"]}})
+	db.stock.update_many({"s_i_id": i_id}, {"$set": {"i_name": item["i_name"], "i_price":item["i_price"], "i_im_id":item["i_im_id"], "i_data":item["i_data"]}})
 
 stockCollection = db.stock
 stockCollection.rename("stock_item")
