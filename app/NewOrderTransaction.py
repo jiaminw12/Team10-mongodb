@@ -1,112 +1,81 @@
-#!/usr/bin/env python
+#! /usr/bin/env python
 
-import pymongo
-
-from time import gmtime, strftime
+from decimal import *
 from datetime import datetime
 
-class NewOrderTransaction():
+class NewOrderTransaction(object):
 
 	def __init__(self, session, w_id, d_id, c_id, num_items, i_id_list, supplier_w_id_list, quantity_list):
-		self.session = session
-		self.w_id = w_id
-		self.d_id = d_id
-		self.c_id = c_id
-		self.num_items = num_items
-		self.i_id_list = i_id_list
-		self.supplier_w_id_list = supplier_w_id_list
-		self.quantity_list = quantity_list
-
-		self.initPreparedStmts()
-
-	def initPreparedStmts(self):
-
-		self.update_stockitem = self.session.prepare("UPDATE stockitem set s_ytd = ?, s_order_cnt = ?, s_remote_cnt = ?, s_quantity = ?  where s_w_id = ? and s_i_id = ?");
-
-		self.select_cnt_stockitem = self.session.prepare("SELECT s_order_cnt, s_remote_cnt from stockitem where s_w_id = ? and s_i_id = ?")
-
-		self.select_next_oid_district = self.session.prepare("SELECT d_next_o_id FROM district where d_w_id = ? AND d_id = ?");
-
-		self.update_next_oid_district = self.session.prepare("UPDATE district SET d_next_o_id = ? where d_w_id = ? AND d_id = ?");
-
-		self.select_item_info = self.session.prepare("SELECT i_price, i_name, s_quantity FROM stockitem where s_w_id = ? AND s_i_id = ?");
-
-		self.select_tax = self.session.prepare("SELECT w_tax,d_tax from item_by_warehouse_district where w_id = ? and d_id = ?");
-
-		self.select_customer_info = self.session.prepare("SELECT c_last, c_credit, c_discount from payment_by_customer where c_w_id = ? and c_d_id = ? and c_id = ?");
-
-		self.insert_order_desc = self.session.prepare("INSERT INTO order_by_desc (o_w_id, o_d_id, o_id, o_c_id, o_carrier_id, o_ol_cnt, o_all_local, o_entry_d) VALUES(?,?,?,?,?,?,?,?)")
-
-		self.insert_order_asc = self.session.prepare("INSERT INTO order_by_asc (o_w_id, o_d_id, o_id, o_c_id, o_carrier_id, o_ol_cnt, o_all_local, o_entry_d) VALUES (?,?,?,?,?,?,?,?)")
-
-		self.insert_orderline = self.session.prepare("INSERT INTO orderline (ol_w_id, ol_d_id, ol_o_id, ol_number, ol_i_id, ol_delivery_d, ol_amount, ol_supply_w_id, ol_quantity, ol_dist_info) VALUES (?,?,?,?,?,?,?,?,?,?)");
-
-	def process(self):
-		self.updateNextOrderId();
-		self.getTaxInformation();
-		self.getCustomerInformation();
-		self.getAllItemInformation();
-		self.insertNewOrderLine();
-		self.printOutput();
-
-	def printOutput(self):
-		print("Customer ID(%d,%d,%d), Lastname:%s, Credit:%s, Discount:%.4f" %(self.w_id,self.d_id, self.c_id, self.c_last, self.c_credit, self.c_discount));
-	
-		print("Warehouse Tax:%.4f, Disctrict Tax:%.4f" %(self.w_tax, self.d_tax));
-
-		print("Order Num: %d, Entry Date: %s" %(self.o_id, self.o_entry_d));
-
-		print("Number of items:%d, Total amount:%.4f" %(self.num_items, self.total_amt));
+		self.session = session;
+		self.w_id = w_id;
+		self.d_id = d_id;
+		self.c_id = c_id;
+		self.num_items = num_items;
+		self.i_id_list = i_id_list;
+		self.supplier_w_id_list = supplier_w_id_list;
+		self.quantity_list = quantity_list;
 		
-		for i in range(0, self.num_items):
-			print("Item Num:%d, Name:%s, Supplier Warehouse:%d, Quantity:%d, OL Amount: %.4f, S_Quantity:%d"%(self.i_id_list[i], self.i_name_list[i], self.supplier_w_id_list[i], self.quantity_list[i], self.itemamt_list[i], self.s_quantity_list[i]));
+		print("wid=%d, did=%d, cid=%d\n" %(w_id, d_id, c_id));
+		self.getCollections();
+	
+	def getCollections(self):
+		self.warehouse_district = self.session.warehouse_district;
+		self.customer = self.session.customer;
+		self.stockitem = self.session.stock_item;
+		self.order = self.session.order
 
-													 
+	def getWarehouseInformation(self):
+		warehouseDistrictRowAggregate = [{"$unwind":"$district"},{"$match":{"w_id":self.w_id, "district.d_id":self.d_id}}, {"$project":{"w_tax":1, "district.d_next_o_id":1, "district.d_tax":1}}];
+		result = list(self.warehouse_district.aggregate(warehouseDistrictRowAggregate))
+		self.w_tax = result[0]["w_tax"];
+		self.d_next_o_id = result[0]["district"]["d_next_o_id"];
+		self.d_tax = result[0]["district"]["d_tax"];
+		print("W_TAX = %s, D_TAX = %s, D_NEXT_O_ID = %s" %(self.w_tax, self.d_tax, self.d_next_o_id));
+		
+
+	def updateNextOID(self):
+		self.d_next_o_id = self.d_next_o_id + 1;
+		result = self.warehouse_district.update({"w_id":self.w_id, "district.d_id":self.d_id}, {"$set":{"district.$.d_next_o_id":self.d_next_o_id}})
+		print("Updated next o id to %d" %(self.d_next_o_id));
+
+
+
 	def getCustomerInformation(self):
-		rows = self.session.execute(self.select_customer_info, (self.w_id, self.d_id, self.c_id));		
-		self.c_last = rows[0].c_last;
-		self.c_credit = rows[0].c_credit;
-		self.c_discount = rows[0].c_discount;
+		result = self.customer.find({"c_w_id":self.w_id, "c_d_id":self.d_id, "c_id":self.c_id})	
+		self.c_last = result[0]["c_last"];
+		self.c_credit = result[0]["c_credit"];
+		self.c_discount = result[0]["c_discount"];
+		print("C_LAST = %s, C_CREDIT = %s, C_DISCOUNT = %s" %(self.c_last, self.c_credit, self.c_discount));			
 
-													 
-	# Increment d_next_o_id by 1 in table DISTRICT and ITEM_BY_WAREHOUSE_DISTRICT
-	def updateNextOrderId(self):
-		rows = self.session.execute(self.select_next_oid_district, (self.w_id, self.d_id));
-		self.d_next_o_id = int(rows[0].d_next_o_id) + 1;
-		self.session.execute(self.update_next_oid_district, (self.d_next_o_id, self.w_id, self.d_id));
-	
-													 
-	def getTaxInformation(self):
-		rows = self.session.execute(self.select_tax, (self.w_id, self.d_id));
-		self.w_tax = rows[0].w_tax;
-		self.d_tax = rows[0].d_tax;
 
-	
+
 	def getAllItemInformation(self):		
+		print("ASDSADSAD");
 		self.i_price_list = [0] * self.num_items;
 		self.i_name_list = [0] * self.num_items;
 		self.s_quantity_list = [0] * self.num_items;
 		self.itemamt_list = [0] * self.num_items;
 		
+		print("NUM ITEMS: %d" %(self.num_items));
 		for i in range(0, self.num_items):
-			rows = self.session.execute(self.select_item_info, (self.supplier_w_id_list[i], self.i_id_list[i]));
-			self.i_price_list[i] = rows[0][0];
-			self.i_name_list[i] = rows[0][1];
-			self.s_quantity_list[i] = rows[0][2];
+			print("Stockinfo for w_id:%d, i_id:%d" % (self.supplier_w_id_list[i], self.i_id_list[i]));
+			rows = list(self.stockitem.find({"s_w_id":self.supplier_w_id_list[i], "s_i_id":self.i_id_list[i]}));
+			self.i_price_list[i] = rows[0]["i_price"];
+			self.i_name_list[i] = rows[0]["i_name"];
+			self.s_quantity_list[i] = rows[0]["s_quantity"];
+			print("PRICE = %d, NAME = %s, S_QTY = %d" %(self.i_price_list[i], self.i_name_list[i], self.s_quantity_list[i]));
 
-													 
 	def updateStockItem(self, ytd, _remotecnt, wid, iid, s_qty):
-		rows = self.session.execute(self.select_cnt_stockitem, (wid, iid));
-		if rows:
-			ordercnt = rows[0].s_order_cnt;
-			remotecnt = rows[0].s_remote_cnt;
-			self.session.execute(self.update_stockitem,(ytd, ordercnt, remotecnt+_remotecnt, s_qty, wid, iid));
-
-													 
-	def insertCustomerByDelivery(self, ol_number, ol_amount, ol_i_id, ol_quantity, ol_supply_w_id):
-		self.session.execute(self.insert_delivery_by_customer, (self.w_id, self.d_id, self.o_id, ol_number, self.c_id, self.o_carrier_id, self.o_entry_d, ol_amount, None, ol_i_id, ol_quantity, ol_supply_w_id));
+		rows = list(self.stockitem.find({"s_w_id":wid, "s_i_id":iid}));
 		
-													 
+		if rows:
+			s_ytd = rows[0]["s_ytd"] + ytd;
+			ordercnt = rows[0]["s_order_cnt"] + 1;
+			remotecnt = rows[0]["s_remote_cnt"] + _remotecnt;
+			self.stockitem.update({"s_w_id":wid, "s_i_id":iid}, {"$set":{"s_ytd":s_ytd, "s_quantity":s_qty, "s_order_cnt":ordercnt, "s_remote_cnt":remotecnt}})
+
+	
+
 	def insertNewOrderLine(self):
 		#Fill in Order data
 		self.o_id = self.d_next_o_id;
@@ -118,11 +87,9 @@ class NewOrderTransaction():
 		self.o_ol_cnt = self.num_items;
 		self.o_all_local = int(all(x == self.o_w_id for x in self.supplier_w_id_list));
 
+		newOrder = {"o_w_id":self.o_w_id, "o_d_id":self.o_d_id, "o_id":self.o_id, "o_c_id":self.o_c_id, "o_carrier_id":self.o_carrier_id, "o_ol_cnt":self.o_ol_cnt, "o_all_local":self.o_all_local, "o_entry_d":self.o_entry_d, "o_line":[]};
+
 		self.total_amt = 0;
-													 
-		self.session.execute(self.insert_order_desc, (self.o_w_id, self.o_d_id, self.o_id, self.o_c_id, self.o_carrier_id, self.o_ol_cnt, self.o_all_local, self.o_entry_d));
-													 
-		self.session.execute(self.insert_order_asc, (self.o_w_id, self.o_d_id, self.o_id, self.o_c_id, self.o_carrier_id, self.o_ol_cnt, self.o_all_local, self.o_entry_d));
 
 		for i in range(0, self.num_items):
 			adjusted_qty = self.s_quantity_list[i] - self.quantity_list[i];
@@ -144,5 +111,42 @@ class NewOrderTransaction():
 			self.ol_i_id = self.i_id_list[i];
 			self.ol_quantity = self.quantity_list[i]
 			self.ol_supply_w_id = self.supplier_w_id_list[i]
-													 
-			self.session.execute(self.insert_orderline, (self.o_w_id, self.o_d_id, self.o_id, self.ol_number, self.ol_i_id, None, self.ol_amount, self.ol_supply_w_id, self.ol_quantity, self.ol_dist_info))
+			newOrder["o_line"].append({"ol_amount":self.ol_amount, "ol_deliver_d":datetime.now(), "ol_number":self.ol_number, "ol_dist_info":self.ol_dist_info, "ol_i_id":self.ol_i_id, "ol_supply_w_id":self.ol_supply_w_id, "ol_quantity":self.ol_quantity}); 
+
+		self.order.insert(newOrder);		
+
+
+
+	
+	def printOutput(self):
+		print("Customer ID(%d,%d,%d), Lastname:%s, Credit:%s, Discount:%.4f" %(self.w_id,self.d_id, self.c_id, self.c_last, self.c_credit, self.c_discount));
+	
+		print("Warehouse Tax:%.4f, Disctrict Tax:%.4f" %(self.w_tax, self.d_tax));
+
+		print("Order Num: %d, Entry Date: %s" %(self.o_id, self.o_entry_d));
+
+		print("Number of items:%d, Total amount:%.4f" %(self.num_items, self.total_amt));
+		
+		for i in range(0, self.num_items):
+			print("Item Num:%d, Name:%s, Supplier Warehouse:%d, Quantity:%d, OL Amount: %.4f, S_Quantity:%d"%(self.i_id_list[i], self.i_name_list[i], self.supplier_w_id_list[i], self.quantity_list[i], self.itemamt_list[i], self.s_quantity_list[i]));
+
+
+	def process(self):
+		self.getWarehouseInformation();
+		self.updateNextOID();
+		self.getCustomerInformation();
+		self.getAllItemInformation();
+		self.insertNewOrderLine();
+		self.printOutput();
+
+
+	
+
+
+
+
+
+
+
+
+
