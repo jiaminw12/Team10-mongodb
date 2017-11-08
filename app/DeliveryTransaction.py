@@ -18,9 +18,9 @@ class DeliveryTransaction(object):
         def get_next_order_and_customer(self, district_no):
                 customerCollection = self.session.customer
                 orderCollection = self.session.order
-                min_order = list(orderCollection.find({“o_w_id":self.w_id, "o_d_id":district_no, "o_carrier_id": 0}).sort([("o_id", 1)]).limit(1))
+                min_order = list(orderCollection.find({"o_w_id":self.w_id, "o_d_id":district_no, "o_carrier_id": 0}).sort([("o_id", 1)]).limit(1))
                 if min_order:
-                        order_id = min_order[0][“o_id"]
+                        order_id = min_order[0]["o_id"]
                         customer = min_order[0]["o_c_id"]
                         # Update carrier id
                         orderCollection.update({"o_w_id":self.w_id, "o_d_id":district_no, "o_id": order_id}, {"$set": {"o_carrier_id":self.carrier_id}})
