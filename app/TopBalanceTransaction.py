@@ -10,7 +10,7 @@ class TopBalanceTransaction(object):
 
 	def process(self):
 		customerCollection = self.session.customer
-		cbalanceCollection = list(customerCollection.find({"w_name":{"$exists":"true"}}).sort([("c_balance", -1)]).limit(10))
+		cbalanceCollection = list(customerCollection.find().sort([("c_balance", -1)]).limit(10))
 			
 		for result in cbalanceCollection:
 			print "C_FIRST: %s,  C_MIDDLE: %s,  C_LAST: %s"%(result["c_first"], result["c_middle"], result["c_last"])

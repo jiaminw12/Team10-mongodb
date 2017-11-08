@@ -10,9 +10,9 @@ class OrderStatusTransaction(object):
 
 	def __init__(self, session, c_w_id, c_d_id, c_id):
 		self.session = session
-		self.c_w_id = c_w_id
-		self.c_d_id = c_d_id
-		self.c_id = c_id
+		self.c_w_id = int(c_w_id)
+		self.c_d_id = int(c_d_id)
+		self.c_id = int(c_id)
 
 	def process(self):
 	
@@ -21,10 +21,10 @@ class OrderStatusTransaction(object):
 		orderCollection = self.session.order
 
 		# get the customer's info
-		selected_customer = customerCollection.find_one({"c_w_id":int(self.c_w_id),"c_d_id":int(self.c_d_id),"c_id":int(self.c_id)})
+		selected_customer = customerCollection.find_one({"c_w_id":self.c_w_id,"c_d_id":self.c_d_id,"c_id":self.c_id})
 		
 		# get the last order id
-		select_last_order = orderCollection.find_one({"o_w_id":int(self.c_w_id),"o_d_id":int(self.c_d_id),"o_c_id":int(self.c_id)}, sort = [("o_id",pymongo.DESCENDING)])
+		select_last_order = orderCollection.find_one({"o_w_id":self.c_w_id,"o_d_id":self.c_d_id,"o_c_id":self.c_id}, sort = [("o_id",pymongo.DESCENDING)])
 		
 		if select_last_order:
 		
