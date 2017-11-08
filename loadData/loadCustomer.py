@@ -18,7 +18,7 @@ for customer in customerCollection.find():
 	warehouseName = warehouseCollection.find_one({"w_id": customer["c_w_id"]})
 	warehouseDistrictRow = [{"$match": {"w_id": customer["c_w_id"]}}, {"$project": {"district": {"$filter": {"input": "$district", "as": "district", "cond": {"$eq": ["$$district.d_id", customer["c_d_id"]]}}}, "_id": 0}}]
 	result = list(warehouseCollection.aggregate(warehouseDistrictRow))
-	db.customer.update({"c_w_id": customer["c_w_id"], "c_d_id": customer["c_d_id"]},{"$set":{"w_name": warehouseName["w_name"], "d_name":result[0]["district"][0]["d_name"]}})
+	db.customer.update_many({"c_w_id": customer["c_w_id"], "c_d_id": customer["c_d_id"]},{"$set":{"w_name": warehouseName["w_name"], "d_name":result[0]["district"][0]["d_name"]}})
 
 db.customer.update({}, {"$unset": {"c__street_1":1}}, multi=True)
 db.customer.update({}, {"$unset": {"c__street_2":1}}, multi=True)
