@@ -103,7 +103,7 @@ class NewOrderTransaction(object):
 			self.ol_i_id = self.i_id_list[i];
 			self.ol_quantity = self.quantity_list[i]
 			self.ol_supply_w_id = self.supplier_w_id_list[i]
-			newOrder["o_line"].append({"ol_amount":self.ol_amount, "ol_deliver_d":datetime.now().strftime("%Y-%m-%d %H:%M:%S.000"), "ol_number":self.ol_number, "ol_dist_info":self.ol_dist_info, "ol_i_id":self.ol_i_id, "ol_supply_w_id":self.ol_supply_w_id, "ol_quantity":self.ol_quantity});
+			newOrder["o_line"].append({"ol_amount":self.ol_amount, "ol_delivery_d":datetime.now().strftime("%Y-%m-%d %H:%M:%S.000"), "ol_number":self.ol_number, "ol_dist_info":self.ol_dist_info, "ol_i_id":self.ol_i_id, "ol_supply_w_id":self.ol_supply_w_id, "ol_quantity":self.ol_quantity});
 		
 		self.order.insert(newOrder);
 
