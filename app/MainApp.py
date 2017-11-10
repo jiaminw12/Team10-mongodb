@@ -150,9 +150,12 @@ with open(filePath, 'r+') as myFile:
 connect.close()
 finalExecutionTime = (time.time() - start_time)
 # Each client
+# a - Number of executed transaction
+# b - total transaction execution time in seconds
+# transaction throughput - (a)/(b)
 print "\n--- %s seconds ---" % (finalExecutionTime)
 print "--- Number of executed transactions: %d" % (numOfExceutedTransaction)
-throughput = finalExecutionTime / numOfExceutedTransaction
+throughput = numOfExceutedTransaction / finalExecutionTime
 print "--- Transaction Throughput: %f" % (throughput)
 
 with open("throughput.txt", "a") as myfile:
