@@ -75,7 +75,7 @@ class NewOrderTransaction(object):
 		self.o_w_id = self.w_id;
 		self.o_c_id = self.c_id;
 		self.o_entry_d = datetime.now().strftime("%Y-%m-%d %H:%M:%S.000") #strftime("%Y-%m-%d %H:%M:%S", gmtime()); #Not sure format
-		self.o_carrier_id = None;
+		self.o_carrier_id = 0;
 		self.o_ol_cnt = self.num_items;
 		self.o_all_local = int(all(x == self.o_w_id for x in self.supplier_w_id_list));
 		
