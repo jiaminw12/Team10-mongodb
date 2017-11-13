@@ -36,6 +36,8 @@ cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 
 ./mongoimport -d team10 -c stock --type csv --file ~/Team10-mongodb/data-files/stock.csv --fields s_w_id,s_i_id,s_quantity,s_ytd,s_order_cnt,s_remote_cnt,s_dist_01,s_dist_02,s_dist_03,s_dist_04,s_dist_05,s_dist_06,s_dist_07,s_dist_08,s_dist_09,s_dist_10,s_data
 
+./mongo < ~/Team10-mongodb/mongo_create_index.js
+
 # Update Table
 cd ~/Team10-mongodb/loadData
 chmod +x *.py
@@ -53,9 +55,27 @@ echo -ne "Load Order and Orderline \n"
 ./loadOrder.py localhost 27017
 
 cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
-./mongo < ~/Team10-mongodb/mongo_create_index.js
+./mongo < ~/Team10-mongodb/mongo_create_index_after_build.js
 
 ./mongoexport -d team10 -c warehouse_district --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/warehouse_district.json
 ./mongoexport -d team10 -c customer --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/customer.json
 ./mongoexport -d team10 -c stock_item --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/stock_item.json
 ./mongoexport -d team10 -c order --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/order.json
+
+
+echo -ne "\n Beginning sharding process \n"
+./mongo --host $1 --port 27017 team10 --eval 'sh.enableSharding("team10")'
+./mongo --host $1 --port 27017 team10 --eval 'sh.shardCollection("team10.warehouse_district", {w_id: 1})'
+./mongo --host $1 --port 27017 team10 --eval 'sh.shardCollection("team10.customer", { c_w_id: 1, c_d_id: 1, c_id: 1 })'
+./mongo --host $1 --port 27017 team10 --eval 'sh.shardCollection("team10.order", { o_w_id: 1, o_d_id: 1, o_id: 1 })'
+./mongo --host $1 --port 27017 team10 --eval 'sh.shardCollection("team10.stock_item", { s_w_id: 1, s_i_id: 1})'
+
+echo -ne "\n Starting Balancer \n"
+
+./mongo --host $1 --port 27017 team10 --eval 'sh.startBalancer()'
+
+echo -ne "\n Check chunks \n"
+
+./mongo --host $1 --port 27017 team10 --eval 'sh.status()'
+
+echo -ne "\n End of Sharding \n"
