@@ -25,4 +25,7 @@ cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 
 ./mongoimport -d team10 -c order --type json --file /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/order.json
 
-./mongo < ~/Team10-mongodb/mongo_create_index.js
+./mongo < ~/Team10-mongodb/mongo_create_index_after_build.js
+
+cd ~/Team10-mongodb
+bash shard.sh

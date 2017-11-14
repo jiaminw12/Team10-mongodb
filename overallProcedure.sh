@@ -3,11 +3,11 @@
 # The following script allows user to benchmark Cassandra performance
 # Enter arguments to select the data to benchmark:
 # For 10 clients:
-#	bash ~/Team10/benchmark/benchmark10.sh
+#	bash ~/Team10-mongodb/benchmark/benchmark10.sh
 # For 20 clients:
-#	bash ~/Team10/benchmark/benchmark20.sh
+#	bash ~/Team10-mongodb/benchmark/benchmark20.sh
 # For 40 clients:
-#	bash ~/Team10/benchmark/benchmark40.sh
+#	bash ~/Team10-mongodb/benchmark/benchmark40.sh
 
 declare -r DATA_FOLDER="data-files"
 declare -r XACT_FOLDER="xact-files"
@@ -34,4 +34,27 @@ else
 fi
 
 # Load all data to all tables
-bash bulkload.sh
+#bash bulkload.sh
+
+# 10 clients
+#echo -ne "Executing 10 clients for READ CONCERN - LOCAL, WRITE CONCERN - 1 .... \n"
+#bash ~/Team10-mongodb/benchmark/benchmark10.sh 1 &> benchmarkResult1001.log
+#cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log1001
+#echo -ne "Done... \n"
+
+# 20 clients
+bash bulkload02.sh
+cd ~/Team10-mongodb
+echo -ne "Executing 20 clients for READ CONCERN - LOCAL, WRITE CONCERN - 1.... \n"
+bash ~/Team10-mongodb/benchmark/benchmark20.sh 1 &> benchmarkResult2001.log
+cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log2001
+echo -ne "Done... \n"
+
+# 40 clients
+bash bulkload02.sh
+cd ~/Team10-mongodb
+echo -ne "Executing 40 clients for READ CONCERN - LOCAL, WRITE CONCERN - 1 .... \n"
+bash ~/Team10-mongodb/benchmark/benchmark40.sh 1 &> benchmarkResult4001.log
+cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log4001
+echo -ne "Done... \n"
+
