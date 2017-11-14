@@ -28,4 +28,4 @@ cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 ./mongo < ~/Team10-mongodb/mongo_create_index_after_build.js
 
 cd ~/Team10-mongodb
-bash shard.sh
+bash shard.sh $1
