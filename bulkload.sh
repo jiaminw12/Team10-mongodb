@@ -43,16 +43,16 @@ cd ~/Team10-mongodb/loadData
 chmod +x *.py
 
 echo -ne "Load Warehouse and District \n"
-./loadWarehouseDistrict.py localhost 27017
+./loadWarehouseDistrict.py $1 27017
 
 echo -ne "Load Customer \n"
-./loadCustomer.py localhost 27017
+./loadCustomer.py $1 27017
 
 echo -ne "Load Stock and Item \n"
-./loadStockItem.py localhost 27017
+./loadStockItem.py $1 27017
 
 echo -ne "Load Order and Orderline \n"
-./loadOrder.py localhost 27017
+./loadOrder.py $1 27017
 
 cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 ./mongo < ~/Team10-mongodb/mongo_create_index_after_build.js
