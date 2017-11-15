@@ -57,6 +57,6 @@ rm ~/Team10-mongodb/app/throughput.txt
 
 # Part 4
 cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
-./mongo < ~/Team10-mongodb-mongodb/part4.js
+./mongo < ~/Team10-mongodb/part4.js
 
 exit
