@@ -23,7 +23,6 @@ echo -ne "Done... \n"
 # 20 clients
 cd ~/Team10-mongodb
 bash bulkload02.sh $1
-cd ~/Team10-mongodb
 echo -ne "Executing 20 clients for READ CONCERN - MAJORITY, WRITE CONCERN - MAJORITY.... \n"
 bash ~/Team10-mongodb/benchmark/benchmark20.sh majority &> benchmarkResult2002.log
 cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log2002
@@ -32,7 +31,6 @@ echo -ne "Done... \n"
 # 40 clients
 cd ~/Team10-mongodb
 bash bulkload02.sh $1
-cd ~/Team10-mongodb
 echo -ne "Executing 40 clients for READ CONCERN - MAJORITY, WRITE CONCERN - MAJORITY .... \n"
 bash ~/Team10-mongodb/benchmark/benchmark40.sh majority &> benchmarkResult4002.log
 cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log4002
