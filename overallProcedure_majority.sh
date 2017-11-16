@@ -13,6 +13,7 @@ cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 ./mongo --host $1 --port 21000 < ~/Team10-mongodb/enableWriteConcernServer.js
 
 # 10 clients
+cd ~/Team10-mongodb
 bash bulkload02.sh $1
 echo -ne "Executing 10 clients for READ CONCERN - MAJORITY, WRITE CONCERN - MAJORITY .... \n"
 bash ~/Team10-mongodb/benchmark/benchmark10.sh majority &> benchmarkResult1002.log
@@ -20,6 +21,7 @@ cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log1002
 echo -ne "Done... \n"
 
 # 20 clients
+cd ~/Team10-mongodb
 bash bulkload02.sh $1
 cd ~/Team10-mongodb
 echo -ne "Executing 20 clients for READ CONCERN - MAJORITY, WRITE CONCERN - MAJORITY.... \n"
@@ -28,6 +30,7 @@ cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log2002
 echo -ne "Done... \n"
 
 # 40 clients
+cd ~/Team10-mongodb
 bash bulkload02.sh $1
 cd ~/Team10-mongodb
 echo -ne "Executing 40 clients for READ CONCERN - MAJORITY, WRITE CONCERN - MAJORITY .... \n"
