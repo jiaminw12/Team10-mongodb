@@ -84,7 +84,7 @@ popularItemXact = 'I'
 topBalanceXact = 'T'
 
 # Connect Keyspace
-connect = Connect(sys.argv[2], sys.argv[3])
+connect = Connect(sys.argv[2], sys.argv[3], sys.argv[4])
 dbSession = connect.getDBSession()
 
 filePath = '../xact-files/%s' % sys.argv[1];
