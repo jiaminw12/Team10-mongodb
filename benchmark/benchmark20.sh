@@ -22,32 +22,33 @@ mkdir log
 cd ~/Team10-mongodb/app
 chmod +x *.py
 echo -ne "Running Performance Measurement now ... \n"
+let "CONCERNLEVEL = $1"
 
 echo -ne "Execute 20 clients ...\n"
 
 for i in 5 10 15 20; do
 	echo -ne "./MainApp.py $i.txt ... \n"
-	./MainApp.py "$i".txt "${lines[0]}" 27017 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
+	./MainApp.py "$i".txt "${lines[0]}" 27017 "$CONCERNLEVEL" 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
 done
 
 for i in 1 6 11 16; do
 	echo -ne "./MainApp.py $i.txt ... \n"
-	./MainApp.py "$i".txt "${lines[1]}" 27017 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
+	./MainApp.py "$i".txt "${lines[1]}" 27017 "$CONCERNLEVEL" 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
 done
 
 for i in 2 7 12 17; do
 	echo -ne "./MainApp.py $i.txt ... \n"
-	./MainApp.py "$i".txt "${lines[2]}" 27017 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
+	./MainApp.py "$i".txt "${lines[2]}" 27017 "$CONCERNLEVEL" 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
 done
 
 for i in 3 8 13 18; do
 	echo -ne "./MainApp.py $i.txt ... \n"
-	./MainApp.py "$i".txt "${lines[3]}" 27017 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
+	./MainApp.py "$i".txt "${lines[3]}" 27017 "$CONCERNLEVEL" 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
 done
 
 for i in 4 9 14 19; do
 	echo -ne "./MainApp.py $i.txt ... \n"
-	./MainApp.py "$i".txt "${lines[4]}" 27017 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
+	./MainApp.py "$i".txt "${lines[4]}" 27017 "$CONCERNLEVEL" 1> ~/Team10-mongodb/log/output$i.log 2> ~/Team10-mongodb/log/error$i.log &
 done
 wait
 

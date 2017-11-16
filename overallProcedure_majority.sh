@@ -9,36 +9,10 @@
 # For 40 clients:
 #	bash ~/Team10-mongodb/benchmark/benchmark40.sh
 
-declare -r DATA_FOLDER="data-files"
-declare -r XACT_FOLDER="xact-files"
-
-cd ~/Team10-mongodb
-
-echo -ne "Checking whether data and xact folder exist...\n"
-if [ -d $DATA_FOLDER ];
-then
-	echo -ne "yes \n"
-else
-	echo -ne "Downloading 4224-project-files...\n"
-	wget http://www.comp.nus.edu.sg/~cs4224/4224-project-files.zip
-	unzip 4224-project-files.zip
-
-	cd 4224-project-files
-	mv data-files ~/Team10-mongodb/
-	mv xact-files ~/Team10-mongodb/
-	cd ..
-	rm -Rf 4224-project-files
-	rm -Rf 4224-project-files.zip
-	echo -ne "Done...\n"
-
-fi
-
-# Load all data to all tables
-bash bulkload.sh $1
-
 # 10 clients
+bash bulkload02.sh $1
 echo -ne "Executing 10 clients for READ CONCERN - LOCAL, WRITE CONCERN - 1 .... \n"
-bash ~/Team10-mongodb/benchmark/benchmark10.sh 1 &> benchmarkResult1001.log
+bash ~/Team10-mongodb/benchmark/benchmark10.sh majority &> benchmarkResult1001.log
 cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log1001
 echo -ne "Done... \n"
 
@@ -46,7 +20,7 @@ echo -ne "Done... \n"
 bash bulkload02.sh $1
 cd ~/Team10-mongodb
 echo -ne "Executing 20 clients for READ CONCERN - LOCAL, WRITE CONCERN - 1.... \n"
-bash ~/Team10-mongodb/benchmark/benchmark20.sh 1 &> benchmarkResult2001.log
+bash ~/Team10-mongodb/benchmark/benchmark20.sh majority &> benchmarkResult2001.log
 cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log2001
 echo -ne "Done... \n"
 
@@ -54,7 +28,7 @@ echo -ne "Done... \n"
 bash bulkload02.sh $1
 cd ~/Team10-mongodb
 echo -ne "Executing 40 clients for READ CONCERN - LOCAL, WRITE CONCERN - 1 .... \n"
-bash ~/Team10-mongodb/benchmark/benchmark40.sh 1 &> benchmarkResult4001.log
+bash ~/Team10-mongodb/benchmark/benchmark40.sh majority &> benchmarkResult4001.log
 cp -a ~/Team10-mongodb/log ~/Team10-mongodb/log4001
 echo -ne "Done... \n"
 
