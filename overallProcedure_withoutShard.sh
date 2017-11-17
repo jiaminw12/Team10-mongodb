@@ -35,7 +35,7 @@ fi
 
 # 10 clients
 cd ~/Team10-mongodb
-bash bulkload03.sh $1
+bash bulkload03.sh $1 $2
 echo -ne "Executing 10 clients for READ CONCERN - LOCAL, WRITE CONCERN - 1 .... \n"
 bash ~/Team10-mongodb/benchmark/benchmark10.sh 1 &> benchmarkResultNoShard1001.log
 cp -a ~/Team10-mongodb/log ~/Team10-mongodb/NoShardlog1001
@@ -43,7 +43,7 @@ echo -ne "Done... \n"
 
 # 20 clients
 cd ~/Team10-mongodb
-bash bulkload03.sh $1
+bash bulkload03.sh $1 $2
 echo -ne "Executing 20 clients for READ CONCERN - LOCAL, WRITE CONCERN - 1.... \n"
 bash ~/Team10-mongodb/benchmark/benchmark20.sh 1 &> benchmarkResultNoShard2001.log
 cp -a ~/Team10-mongodb/log ~/Team10-mongodb/NoShardlog2001
@@ -51,7 +51,7 @@ echo -ne "Done... \n"
 
 # 40 clients
 cd ~/Team10-mongodb
-bash bulkload03.sh $1
+bash bulkload03.sh $1 $2
 echo -ne "Executing 40 clients for READ CONCERN - LOCAL, WRITE CONCERN - 1 .... \n"
 bash ~/Team10-mongodb/benchmark/benchmark40.sh 1 &> benchmarkResultNoShard4001.log
 cp -a ~/Team10-mongodb/log ~/Team10-mongodb/NoShardlog4001
