@@ -10,9 +10,7 @@
 #	bash ~/Team10-mongodb/benchmark/benchmark40.sh arg0
 
 # arg0 can have the following values:
-#		arg0: Consistency Level - 1, 2
-#		1 - ONE
-#		2 - QUORUM
+#		arg0: WRITE CONCERN - 1, MAJORITY
 
 # Run app
 IFS=$'\n' read -d '' -r -a lines < nodeList.txt
