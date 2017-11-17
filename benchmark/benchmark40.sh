@@ -22,6 +22,7 @@ mkdir log
 cd ~/Team10-mongodb/app
 chmod +x *.py
 echo -ne "Running Performance Measurement now ... \n"
+let "CONCERNLEVEL = $1"
 
 echo -ne "Execute 40 clients ...\n"
 
