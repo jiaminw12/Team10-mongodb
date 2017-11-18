@@ -10,7 +10,6 @@
 #	bash ~/Team10-mongodb/benchmark/benchmark40.sh
 
 cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
-./mongo --host $1 --port 21000 < ~/Team10-mongodb/enableWriteConcernServer.js
 
 # 10 clients
 cd ~/Team10-mongodb
