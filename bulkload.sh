@@ -62,5 +62,9 @@ cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 ./mongoexport -d team10 -c stock_item --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/stock_item.json
 ./mongoexport -d team10 -c order --type json --out /temp/mongodb-linux-x86_64-rhel70-3.4.7/json/order.json
 
+zip -r /temp/mongodb-linux-x86_64-rhel70-3.4.7/json.zip /temp/mongodb-linux-x86_64-rhel70-3.4.7/json
+cp /temp/mongodb-linux-x86_64-rhel70-3.4.7/json.zip ~/Team10-mongodb
+
 cd ~/Team10-mongodb
 bash shard.sh $1
+

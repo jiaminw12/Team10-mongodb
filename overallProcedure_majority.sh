@@ -9,6 +9,12 @@
 # For 40 clients:
 #	bash ~/Team10-mongodb/benchmark/benchmark40.sh
 
+cd ~/Team10-mongodb
+cp json.zip /temp/mongodb-linux-x86_64-rhel70-3.4.7
+
+cd /temp/mongodb-linux-x86_64-rhel70-3.4.7
+unzip json.zip
+
 cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
 
 # 10 clients
