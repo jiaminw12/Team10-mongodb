@@ -3,11 +3,16 @@
 # The following script allows user to benchmark Cassandra performance
 # Enter arguments to select the data to benchmark:
 # For 10 clients:
-#	bash ~/Team10-mongodb/benchmark/benchmark10.sh
+#	bash ~/Team10-mongodb/benchmark/benchmark10.sh arg0
 # For 20 clients:
-#	bash ~/Team10-mongodb/benchmark/benchmark20.sh
+#	bash ~/Team10-mongodb/benchmark/benchmark20.sh arg0
 # For 40 clients:
-#	bash ~/Team10-mongodb/benchmark/benchmark40.sh
+#	bash ~/Team10-mongodb/benchmark/benchmark40.sh arg0
+
+# arg0 can have the following values:
+#		arg0: WRITE CONCERN LEVEL
+#		1 - set WRITE CONCERN = 1, READ CONCERN = LOCAL
+#		majority - set WRITE CONCERN = MAJORITY, READ CONCERN = MAJORITY
 
 cd ~/Team10-mongodb
 cp json.zip /temp/mongodb-linux-x86_64-rhel70-3.4.7

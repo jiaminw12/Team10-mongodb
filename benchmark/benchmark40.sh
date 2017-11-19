@@ -10,7 +10,9 @@
 #	bash ~/Team10-mongodb/benchmark/benchmark40.sh arg0
 
 # arg0 can have the following values:
-#		arg0: WRITE CONCERN - 1, MAJORITY
+#		arg0: WRITE CONCERN LEVEL
+#		1 - set WRITE CONCERN = 1, READ CONCERN = LOCAL
+#		majority - set WRITE CONCERN = MAJORITY, READ CONCERN = MAJORITY
 
 # Run app
 IFS=$'\n' read -d '' -r -a lines < nodeList.txt
