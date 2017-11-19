@@ -15,8 +15,6 @@ cp json.zip /temp/mongodb-linux-x86_64-rhel70-3.4.7
 cd /temp/mongodb-linux-x86_64-rhel70-3.4.7
 unzip json.zip
 
-cd /temp/mongodb-linux-x86_64-rhel70-3.4.7/bin
-
 # 10 clients
 cd ~/Team10-mongodb
 bash bulkload02.sh $1
